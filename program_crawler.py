@@ -45,18 +45,54 @@ for i in range(0,len(program8)):
     else:
         pass
 
+
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+import re
+
+html=urlopen("https://ko.wikipedia.org/wiki/%EC%9C%A0%EC%9E%AC%EC%84%9D#%EC%88%98%EC%83%81")
+soup=BeautifulSoup(html,'lxml')
+p=re.compile("\w\w")
+prize=soup.find_all("table",{"class":"wikitable"})
+prize_tbody=prize[-1].find_all("tr")
+
+big_prize=[]
+
+for li in prize_tbody:
+    li=li.find_all('li')
+    for i in li:
+        i=i.get_text()
+        big_prize.append(i)
+
+html2=urlopen("https://ko.wikipedia.org/wiki/%EA%B0%95%ED%98%B8%EB%8F%99")
+soup=BeautifulSoup(html2,'lxml')
+prize2=soup.find_all("table",{"class":"wikitable"})
+prize_Tbody=prize2[1].find_all("tr")
+
+Big_prize=[]
+
+for Li in prize_Tbody:
+    Li=Li.find_all('li')
+    for I in Li:
+        I=I.get_text()
+        Big_prize.append(I)
+
 import numpy as np
 x=np.arange(2)
 x1=['유재석','강호동']
 programs=[len(program4),len(program9)+6]
+수=[51,22]
 print('유재석의 프로그램 출연 횟수: '+str(len(program4)))
 print('강호동의 프로그램 출연 횟수: '+str(len(program9)+6))
 from matplotlib import font_manager, rc
 font_name = font_manager.FontProperties(fname="c:/Windows/Fonts/malgun.ttf").get_name()
 rc('font', family=font_name)
 plt.bar(x, programs, label='프로그램 수', color='b',width=0.2)
+plt.bar(x,수,label='수상 횟수',color='r',width=0.2,bottom=programs)
 plt.xticks(x,x1)
 plt.xlabel('연예인')
-plt.ylabel('횟수')
-plt.suptitle('연예인별 출연한 프로그램 횟수')
+plt.suptitle('출연 프로그램 횟수와 수상 횟수 비교')
+plt.legend()
 plt.show()
+
+
